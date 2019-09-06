@@ -1,7 +1,8 @@
 {
     "name": "UniRx.ObservableUnityWebRequest",
     "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:73ec5dd6ec54d4a7e9959f17a742d96c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
