@@ -25,8 +25,18 @@ namespace UniRx
 
         private static IEnumerator Fetch<T>(UnityWebRequest uwr, IProgress<float> progress, IObserver<T> observer, CancellationToken cancellationToken)
         {
+            if (uwr.downloadHandler == default)
+            {
+                uwr.downloadHandler = new DownloadHandlerBuffer();
+            }
+
+            if (uwr.isDone)
+            {
+                uwr = new UnityWebRequest(uwr.uri, uwr.method, uwr.downloadHandler, uwr.uploadHandler);
+            }
+
             var operation = uwr.SendWebRequest();
-            while (!uwr.isDone && !cancellationToken.IsCancellationRequested)
+            do
             {
                 try
                 {
@@ -39,20 +49,10 @@ namespace UniRx
                 }
 
                 yield return null;
-            }
+            } while (!operation.isDone && !cancellationToken.IsCancellationRequested);
 
             if (cancellationToken.IsCancellationRequested)
             {
-                yield break;
-            }
-
-            try
-            {
-                progress?.Report(uwr.downloadProgress);
-            }
-            catch (Exception e)
-            {
-                observer.OnError(e);
                 yield break;
             }
 
