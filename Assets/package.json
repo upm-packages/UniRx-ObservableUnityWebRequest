@@ -1,7 +1,7 @@
 {
   "name": "dev.upm-packages.unirx-observableunitywebrequest",
   "displayName": "UniRx ObservableUnityWebRequest",
-  "version": "0.0.1-preview.1",
+  "version": "0.0.1-preview.2",
   "unity": "2019.2",
   "description": "UnityWebRequest as IObservable",
   "author": {
