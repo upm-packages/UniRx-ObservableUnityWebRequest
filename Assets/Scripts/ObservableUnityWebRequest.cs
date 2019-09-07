@@ -22,11 +22,11 @@ namespace UniRx
         private const string RequestMethodHead = "HEAD";
         private const string RequestMethodDelete = "DELETE";
 
-        private static Func<DownloadHandler, string> DownloadCallbackString { get; } = downloadHandler => Encoding.UTF8.GetString(downloadHandler.data);
-        private static Func<DownloadHandler, IEnumerable<byte>> DownloadCallbackBytes { get; } = downloadHandler => downloadHandler.data;
-        private static Func<DownloadHandler, Texture2D> DownloadCallbackTexture { get; } = downloadHandler => (downloadHandler as DownloadHandlerTexture)?.texture;
-        private static Func<DownloadHandler, AudioClip> DownloadCallbackAudioClip { get; } = downloadHandler => (downloadHandler as DownloadHandlerAudioClip)?.audioClip;
-        private static Func<DownloadHandler, AssetBundle> DownloadCallbackAssetBundle { get; } = downloadHandler => (downloadHandler as DownloadHandlerAssetBundle)?.assetBundle;
+        internal static Func<DownloadHandler, string> DownloadCallbackString { get; } = downloadHandler => Encoding.UTF8.GetString(downloadHandler.data);
+        internal static Func<DownloadHandler, IEnumerable<byte>> DownloadCallbackBytes { get; } = downloadHandler => downloadHandler.data;
+        internal static Func<DownloadHandler, Texture2D> DownloadCallbackTexture2D { get; } = downloadHandler => (downloadHandler as DownloadHandlerTexture)?.texture;
+        internal static Func<DownloadHandler, AudioClip> DownloadCallbackAudioClip { get; } = downloadHandler => (downloadHandler as DownloadHandlerAudioClip)?.audioClip;
+        internal static Func<DownloadHandler, AssetBundle> DownloadCallbackAssetBundle { get; } = downloadHandler => (downloadHandler as DownloadHandlerAssetBundle)?.assetBundle;
 
         private static IDictionary<HttpStatusCode, Func<UnityWebRequest, UnityWebRequestErrorException>> ExceptionFactoryMap { get; } = new Dictionary<HttpStatusCode, Func<UnityWebRequest, UnityWebRequestErrorException>>
         {
@@ -169,22 +169,22 @@ namespace UniRx
 
         public static IObservable<Texture2D> GetTextureAsObservable(string url, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
-            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture, progress);
+            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
         public static IObservable<Texture2D> GetTextureAsObservable(string url, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
-            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture, progress);
+            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
         public static IObservable<Texture2D> GetTextureAsObservable(Uri uri, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
-            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture, progress);
+            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
         public static IObservable<Texture2D> GetTextureAsObservable(Uri uri, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
-            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture, progress);
+            return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
         #endregion
@@ -259,7 +259,12 @@ namespace UniRx
 
         #endregion
 
-        private static IObservable<T> RequestAsObservable<T>(Func<UnityWebRequest> factory, Func<DownloadHandler, T> downloadCallback, IProgress<float> progress = default)
+        internal static IObservable<T> RequestAsObservable<T>(UnityWebRequest uwr, Func<DownloadHandler, T> downloadCallback, IProgress<float> progress = default)
+        {
+            return RequestAsObservable(() => uwr, downloadCallback, progress);
+        }
+
+        internal static IObservable<T> RequestAsObservable<T>(Func<UnityWebRequest> factory, Func<DownloadHandler, T> downloadCallback, IProgress<float> progress = default)
         {
             return Observable
                 .Create<UnityWebRequest>(
