@@ -12,27 +12,27 @@ namespace UniRx
 
         public static IObservable<string> SendWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackString, progress);
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.FetchString, progress);
         }
 
         private static IObservable<IEnumerable<byte>> SendBytesWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackBytes, progress);
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.FetchBytes, progress);
         }
 
         private static IObservable<Texture2D> SendTexture2DWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackTexture2D, progress);
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.FetchTexture2D, progress);
         }
 
         private static IObservable<AudioClip> SendAudioClipWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackAudioClip, progress);
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.FetchAudioClip, progress);
         }
 
         private static IObservable<AssetBundle> SendAssetBundleWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackAssetBundle, progress);
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.FetchAssetBundle, progress);
         }
     }
 }
