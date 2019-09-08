@@ -266,16 +266,7 @@ namespace UniRx
 
         internal static IObservable<T> RequestAsObservable<T>(Func<UnityWebRequest> factory, Func<DownloadHandler, T> downloadCallback, IProgress<float> progress = default)
         {
-            return Observable
-                .Create<UnityWebRequest>(
-                    observer =>
-                    {
-                        observer.OnNext(factory());
-
-                        return Disposable.Empty;
-                    }
-                )
-                .SelectMany(x => Observable.FromCoroutine<T>((observer, cancellationToken) => Fetch(x, observer, downloadCallback, progress, cancellationToken)));
+            return Observable.FromCoroutine<T>((observer, cancellationToken) => Fetch(factory(), observer, downloadCallback, progress, cancellationToken));
         }
 
         private static IEnumerator Fetch<T>(UnityWebRequest uwr, IObserver<T> observer, Func<DownloadHandler, T> downloadCallback, IProgress<float> progress, CancellationToken cancellationToken)
@@ -313,6 +304,7 @@ namespace UniRx
             else if (uwr.downloadHandler != default)
             {
                 observer.OnNext(downloadCallback(uwr.downloadHandler));
+                observer.OnCompleted();
             }
         }
     }
