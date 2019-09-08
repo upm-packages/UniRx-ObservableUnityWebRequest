@@ -8,6 +8,8 @@ Provides extension methods to fetch as `IObservable` using UnityWebRequest
 upm add package dev.upm-packages.unirx-observableunitywebrequest
 ```
 
+Please refer to [this repository](https://github.com/upm-packages/upm-cli) about the `upm` command.
+
 ## Usages
 
 ### Observable factories
@@ -23,7 +25,7 @@ The supported HTTP methods are: GET, POST, PUT, HEAD and DELETE
 | GET | `ObservableUnityWebRequest.GetAsObservable()` |
 | POST | `ObservableUnityWebRequest.PostAsObservable()` |
 | PUT | `ObservableUnityWebRequest.PutAsObservable()` |
-| HEAD | `ObservableUnityWebRequest.HeadsObservable()` |
+| HEAD | `ObservableUnityWebRequest.HeadAsObservable()` |
 | DELETE | `ObservableUnityWebRequest.DeleteAsObservable()` |
 
 ##### Arguments
