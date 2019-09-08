@@ -1,98 +1,38 @@
 using System;
-using System.Collections;
-using System.Text;
-using System.Threading;
+using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.Networking;
-using Object = UnityEngine.Object;
 
 namespace UniRx
 {
     [PublicAPI]
     public static class UnityWebRequestExtensions
     {
+
         public static IObservable<string> SendWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return Observable
-                .FromCoroutine<string>((observer, cancellationToken) => Fetch(self, progress, observer, cancellationToken));
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackString, progress);
         }
 
-        public static IObservable<T> SendWebRequestAsObservable<T>(this UnityWebRequest self, IProgress<float> progress = default) where T : Object
+        private static IObservable<IEnumerable<byte>> SendBytesWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            return Observable
-                .FromCoroutine<T>((observer, cancellationToken) => Fetch(self, progress, observer, cancellationToken));
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackBytes, progress);
         }
 
-        private static IEnumerator Fetch<T>(UnityWebRequest uwr, IProgress<float> progress, IObserver<T> observer, CancellationToken cancellationToken)
+        private static IObservable<Texture2D> SendTexture2DWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
         {
-            if (uwr.downloadHandler == default)
-            {
-                uwr.downloadHandler = new DownloadHandlerBuffer();
-            }
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackTexture2D, progress);
+        }
 
-            if (uwr.isDone)
-            {
-                uwr = new UnityWebRequest(uwr.uri, uwr.method, uwr.downloadHandler, uwr.uploadHandler);
-            }
+        private static IObservable<AudioClip> SendAudioClipWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
+        {
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackAudioClip, progress);
+        }
 
-            var operation = uwr.SendWebRequest();
-            do
-            {
-                try
-                {
-                    progress?.Report(operation.progress);
-                }
-                catch (Exception e)
-                {
-                    observer.OnError(e);
-                    yield break;
-                }
-
-                yield return null;
-            } while (!operation.isDone && !cancellationToken.IsCancellationRequested);
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                yield break;
-            }
-
-            if (!string.IsNullOrEmpty(uwr.error))
-            {
-                observer.OnError(new UnityWebRequestErrorException(uwr));
-            }
-            else
-            {
-                switch (uwr.downloadHandler)
-                {
-                    case DownloadHandlerBuffer downloadHandlerBuffer:
-                        if (typeof(T) == typeof(string))
-                        {
-                            observer.OnNext((T) (object) Encoding.UTF8.GetString(downloadHandlerBuffer.data));
-                        }
-                        else if (typeof(T) == typeof(byte[]))
-                        {
-                            observer.OnNext((T) (object) downloadHandlerBuffer.data);
-                        }
-                        break;
-                    case DownloadHandlerTexture downloadHandlerTexture when downloadHandlerTexture.texture is T texture:
-                        observer.OnNext(texture);
-                        break;
-                    case DownloadHandlerAudioClip downloadHandlerAudioClip when downloadHandlerAudioClip.audioClip is T audioClip:
-                        observer.OnNext(audioClip);
-                        break;
-                    case DownloadHandlerAssetBundle downloadHandlerAssetBundle when downloadHandlerAssetBundle.assetBundle is T assetBundle:
-                        observer.OnNext(assetBundle);
-                        break;
-                    default:
-                        var text = Encoding.UTF8.GetString(uwr.downloadHandler.data);
-                        if (text is T value)
-                        {
-                            observer.OnNext(value);
-                        }
-
-                        break;
-                }
-            }
+        private static IObservable<AssetBundle> SendAssetBundleWebRequestAsObservable(this UnityWebRequest self, IProgress<float> progress = default)
+        {
+            return ObservableUnityWebRequest.RequestAsObservable(self, ObservableUnityWebRequest.DownloadCallbackAssetBundle, progress);
         }
     }
 }
