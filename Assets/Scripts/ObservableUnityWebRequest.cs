@@ -316,7 +316,8 @@ namespace UniRx
             }
             else if (uwr.downloadHandler != default)
             {
-                observer.OnNext(downloadCallback(uwr.downloadHandler));
+                progress?.Report(operation.progress);
+                observer.OnNext(fetchCallback(uwr));
                 observer.OnCompleted();
             }
         }
