@@ -167,22 +167,22 @@ namespace UniRx
 
         #region Texture2D
 
-        public static IObservable<Texture2D> GetTextureAsObservable(string url, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<Texture2D> GetTexture2DAsObservable(string url, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
-        public static IObservable<Texture2D> GetTextureAsObservable(string url, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<Texture2D> GetTexture2DAsObservable(string url, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(url, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
-        public static IObservable<Texture2D> GetTextureAsObservable(Uri uri, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<Texture2D> GetTexture2DAsObservable(Uri uri, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
 
-        public static IObservable<Texture2D> GetTextureAsObservable(Uri uri, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<Texture2D> GetTexture2DAsObservable(Uri uri, bool nonReadable, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => UnityWebRequestTexture.GetTexture(uri, nonReadable).ApplyRequestHeaders(requestHeaders), DownloadCallbackTexture2D, progress);
         }
