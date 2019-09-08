@@ -1,0 +1,24 @@
+{
+  "name": "unirx-observableunitywebrequest",
+  "version": "1.0.0",
+  "description": "Provides extension methods to fetch as `IObservable` using UnityWebRequest",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "json-server": "^0.15.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "json-server --watch db.js --port 3001"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/upm-packages/UniRx-ObservableUnityWebRequest.git"
+  },
+  "author": "Tetsuya Mori <monry84@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/upm-packages/UniRx-ObservableUnityWebRequest/issues"
+  },
+  "homepage": "https://github.com/upm-packages/UniRx-ObservableUnityWebRequest#readme"
+}

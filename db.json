@@ -1,0 +1,7 @@
+{
+  "fruits": [
+    {"id": 1, "name": "Apple", "name_ja": "りんご"},
+    {"id": 2, "name": "Orange", "name_ja": "みかん"},
+    {"id": 3, "name": "Grape", "name_ja": "ぶどう"}
+  ]
+}
