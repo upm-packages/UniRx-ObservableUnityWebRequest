@@ -35,7 +35,7 @@ namespace UniRx
         }
 
         internal static Func<UnityWebRequest, string> FetchString { get; } = uwr => Encoding.UTF8.GetString(uwr.downloadHandler.data);
-        internal static Func<UnityWebRequest, IEnumerable<byte>> FetchBytes { get; } = uwr => uwr.downloadHandler.data;
+        internal static Func<UnityWebRequest, byte[]> FetchBytes { get; } = uwr => uwr.downloadHandler.data;
         internal static Func<UnityWebRequest, IDictionary<string, string>> FetchResponseHeaders { get; } = uwr => uwr.GetResponseHeaders();
         internal static Func<UnityWebRequest, Texture2D> FetchTexture2D { get; } = uwr => (uwr.downloadHandler as DownloadHandlerTexture)?.texture;
         internal static Func<UnityWebRequest, AudioClip> FetchAudioClip { get; } = uwr => (uwr.downloadHandler as DownloadHandlerAudioClip)?.audioClip;
@@ -66,12 +66,12 @@ namespace UniRx
             return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodGet).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestHeaders(requestHeaders), FetchString, progress);
         }
 
-        public static IObservable<IEnumerable<byte>> GetBytesAsObservable(string url, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<byte[]> GetBytesAsObservable(string url, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodGet).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestHeaders(requestHeaders), FetchBytes, progress);
         }
 
-        public static IObservable<IEnumerable<byte>> GetBytesAsObservable(Uri uri, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
+        public static IObservable<byte[]> GetBytesAsObservable(Uri uri, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodGet).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestHeaders(requestHeaders), FetchBytes, progress);
         }
@@ -90,11 +90,6 @@ namespace UniRx
             return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodPost).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestBody(requestBody).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
         }
 
-        public static IObservable<string> PostAsObservable(string url, IEnumerable<byte> requestBody, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
-        {
-            return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodPost).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestBody(requestBody).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
-        }
-
         public static IObservable<string> PostAsObservable(Uri uri, string requestBody, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodPost).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestBody(requestBody).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
@@ -105,21 +100,11 @@ namespace UniRx
             return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodPost).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestBody(requestBody).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
         }
 
-        public static IObservable<string> PostAsObservable(Uri uri, IEnumerable<byte> requestBody, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
-        {
-            return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodPost).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyRequestBody(requestBody).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
-        }
-
         #endregion
 
         #region PUT
 
         public static IObservable<string> PutAsObservable(string url, byte[] rawData, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
-        {
-            return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodPut).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyUploadHandler(new UploadHandlerRaw(rawData)).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
-        }
-
-        public static IObservable<string> PutAsObservable(string url, IEnumerable<byte> rawData, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodPut).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyUploadHandler(new UploadHandlerRaw(rawData.ToArray())).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
         }
@@ -127,11 +112,6 @@ namespace UniRx
         public static IObservable<string> PutAsObservable(string url, FileInfo fileInfo, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
         {
             return RequestAsObservable(() => new UnityWebRequest(url, RequestMethodPut).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyUploadHandler(new UploadHandlerFile(fileInfo.FullName)).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
-        }
-
-        public static IObservable<string> PutAsObservable(Uri uri, IEnumerable<byte> rawData, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
-        {
-            return RequestAsObservable(() => new UnityWebRequest(uri, RequestMethodPut).ApplyDownloadHandler(new DownloadHandlerBuffer()).ApplyUploadHandler(new UploadHandlerRaw(rawData.ToArray())).ApplyRequestHeader("Content-Type", contentType).ApplyRequestHeaders(requestHeaders), FetchString, progress);
         }
 
         public static IObservable<string> PutAsObservable(Uri uri, byte[] rawData, string contentType = RequestHeader.ContentType.Application.XWwwFormUrlencoded, IDictionary<string, string> requestHeaders = default, IProgress<float> progress = default)
