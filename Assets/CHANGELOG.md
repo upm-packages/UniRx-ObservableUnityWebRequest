@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1] - 2020-05-16
+
+Use byte[] instead of IEnumerable<byte>
+
+### Changes
+
+- #5 Use `byte[]` instead of `IEnumerable<byte>`
+
 ## [0.0.1-preview.3] - 2019/09/07
 
 * Refactor extension methods
