@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0] - 2021-01-21
+
+Use GitHub version for UniRx
+
+### Changes
+
+- Use GitHub version for UniRx
+
 ## [1.0.1] - 2020-05-16
 
 Use byte[] instead of IEnumerable<byte>
