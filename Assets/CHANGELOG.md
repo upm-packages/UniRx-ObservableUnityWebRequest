@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1] - 2021-01-21
+
+Remove UniRx from package.json
+
+### Fixes
+
+- Remove UniRx from package.json
+
 ## [1.1.0] - 2021-01-21
 
 Use GitHub version for UniRx
