@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "json-server": "^0.15.1"
+    "json-server": "^0.16.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
